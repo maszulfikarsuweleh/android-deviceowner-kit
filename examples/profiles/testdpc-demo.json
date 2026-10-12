@@ -1,0 +1,23 @@
+{
+  "$schema": "../../public/profile.schema.json",
+  "schemaVersion": 1,
+  "name": "Demo: TestDPC on a spare phone",
+  "description": "Installs Google's open-source TestDPC sample, makes it Device Owner and keeps the screen on while charging. Use it to try Ownerkit on a device you can factory reset.",
+  "apps": [
+    { "id": "dpc", "packageName": "com.afwsamples.testdpc", "label": "TestDPC" }
+  ],
+  "deviceOwner": { "app": "dpc", "receiver": ".DeviceAdminReceiver" },
+  "fields": [
+    { "id": "site", "label": "Site", "placeholder": "Head office", "keep": true },
+    { "id": "asset", "label": "Asset tag", "required": true, "pattern": "^[A-Z0-9-]{3,20}$", "placeholder": "KSK-0001", "help": "Printed on the device label." }
+  ],
+  "checks": { "minSdk": 24, "minBatteryPercent": 15 },
+  "steps": [
+    { "type": "install", "app": "dpc" },
+    { "type": "setDeviceOwner" },
+    { "type": "verifyDeviceOwner" },
+    { "type": "setting", "namespace": "global", "key": "stay_on_while_plugged_in", "value": "7", "label": "Keep the screen on while charging" },
+    { "type": "pushFile", "path": "/sdcard/Download/ownerkit-unit.json", "content": "{\"site\": \"{{field.site}}\", \"asset\": \"{{field.asset}}\", \"serial\": \"{{device.serial}}\"}\n", "label": "Save the unit details on the device" },
+    { "type": "launch", "app": "dpc" }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "../../public/profile.schema.json",
+  "schemaVersion": 1,
+  "name": "Lobby kiosk",
+  "description": "Template for your own kiosk app. Replace the package names, receiver and config action with your app's.",
+  "branding": { "title": "Acme device setup", "accent": "#1f7a5a" },
+  "apps": [
+    { "id": "kiosk", "packageName": "com.example.kiosk", "label": "Kiosk app" },
+    { "id": "launcher", "packageName": "com.example.launcher", "label": "Kiosk launcher" }
+  ],
+  "deviceOwner": { "app": "kiosk", "receiver": ".admin.KioskAdminReceiver" },
+  "fields": [
+    { "id": "site", "label": "Site code", "required": true, "pattern": "^[A-Z]{3}-\\d{2}$", "placeholder": "JKT-01", "keep": true },
+    { "id": "unit", "label": "Unit number", "required": true, "pattern": "^\\d{1,3}$", "placeholder": "7" }
+  ],
+  "checks": { "minSdk": 26, "noAccounts": true, "singleUser": true, "noOtherDeviceOwner": true, "minBatteryPercent": 30 },
+  "steps": [
+    { "type": "install", "app": "launcher" },
+    { "type": "install", "app": "kiosk", "grantPermissions": true },
+    { "type": "setDeviceOwner" },
+    { "type": "verifyDeviceOwner" },
+    { "type": "grantPermissions", "app": "kiosk", "permissions": ["android.permission.CAMERA", "android.permission.ACCESS_FINE_LOCATION"] },
+    { "type": "setting", "namespace": "global", "key": "stay_on_while_plugged_in", "value": "7", "label": "Keep the screen on while charging" },
+    { "type": "setting", "namespace": "system", "key": "screen_off_timeout", "value": "1800000", "label": "Screen timeout 30 minutes" },
+    { "type": "disablePackages", "packages": ["com.android.chrome", "com.google.android.youtube"], "label": "Hide apps the public shouldn't open" },
+    { "type": "broadcast", "component": "com.example.kiosk/.config.ProvisioningReceiver", "extras": { "siteCode": "{{field.site}}", "unitNumber": "{{field.unit}}", "serial": "{{device.serial}}" }, "label": "Send site and unit to the app" },
+    { "type": "shell", "command": "cmd notification set_dnd on", "label": "Turn on Do Not Disturb", "allowFailure": true },
+    { "type": "launch", "app": "kiosk" }
+  ],
+  "guide": {
+    "en": "# Before you start\n\n- Use a data USB cable.\n- Factory reset the device and skip every setup screen.\n\n# Set up the device\n\n1. Turn on **USB debugging** in Developer options.\n2. Press **Connect device** and tap **Allow** on the device.\n3. Fill in **Site code** and **Unit number** from the job sheet.\n4. Press **Provision device** and keep the cable in until every step is done.\n\n> Stop and call your supervisor if a check says the device is managed by another app."
+  }
+}

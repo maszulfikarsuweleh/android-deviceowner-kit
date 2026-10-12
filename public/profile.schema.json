@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ownerkit provisioning profile",
+  "description": "Describes the apps, Device Owner, per-unit fields and steps used to provision one kind of Android dedicated device.",
+  "type": "object",
+  "required": ["schemaVersion", "name", "apps", "steps"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "branding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "description": "Shown in the header and browser tab." },
+        "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "logo": { "type": "string", "pattern": "^(data:image/|https://)" }
+      }
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "packageName"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z][\\w-]*$" },
+          "packageName": { "type": "string", "pattern": "^[a-zA-Z][\\w]*(\\.[a-zA-Z][\\w]*)+$" },
+          "label": { "type": "string" },
+          "url": { "type": "string", "pattern": "^https://", "description": "Download link. The server must allow cross-origin requests." },
+          "sha256": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" }
+        }
+      }
+    },
+    "deviceOwner": {
+      "type": "object",
+      "required": ["app", "receiver"],
+      "additionalProperties": false,
+      "properties": {
+        "app": { "type": "string", "description": "Id of the app in apps." },
+        "receiver": { "type": "string", "description": "\".AdminReceiver\" or a fully qualified class name." }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z][\\w-]*$" },
+          "label": { "type": "string" },
+          "required": { "type": "boolean" },
+          "pattern": { "type": "string", "description": "Regular expression the value must match." },
+          "placeholder": { "type": "string" },
+          "help": { "type": "string" },
+          "keep": { "type": "boolean", "description": "Keep the value for the next unit in batch mode." }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minSdk": { "type": "integer", "minimum": 21 },
+        "noAccounts": { "type": "boolean" },
+        "singleUser": { "type": "boolean" },
+        "noOtherDeviceOwner": { "type": "boolean" },
+        "minBatteryPercent": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "enum": ["install", "setDeviceOwner", "verifyDeviceOwner", "grantPermissions", "setting", "pushFile", "broadcast", "disablePackages", "shell", "launch", "reboot"] },
+          "label": { "type": "string" }
+        },
+        "allOf": [
+          { "if": { "properties": { "type": { "const": "install" } } }, "then": { "required": ["app"], "properties": { "app": { "type": "string" }, "grantPermissions": { "type": "boolean" } } } },
+          { "if": { "properties": { "type": { "const": "grantPermissions" } } }, "then": { "required": ["app", "permissions"], "properties": { "permissions": { "type": "array", "items": { "type": "string" }, "minItems": 1 } } } },
+          { "if": { "properties": { "type": { "const": "setting" } } }, "then": { "required": ["namespace", "key", "value"], "properties": { "namespace": { "enum": ["global", "secure", "system"] }, "key": { "type": "string" }, "value": { "type": "string" } } } },
+          { "if": { "properties": { "type": { "const": "pushFile" } } }, "then": { "required": ["path", "content"], "properties": { "path": { "type": "string", "pattern": "^/" }, "content": { "type": "string" } } } },
+          { "if": { "properties": { "type": { "const": "broadcast" } } }, "then": { "anyOf": [{ "required": ["component"] }, { "required": ["action"] }], "properties": { "component": { "type": "string" }, "action": { "type": "string" }, "extras": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } } } } },
+          { "if": { "properties": { "type": { "const": "disablePackages" } } }, "then": { "required": ["packages"], "properties": { "packages": { "type": "array", "items": { "type": "string" }, "minItems": 1 } } } },
+          { "if": { "properties": { "type": { "const": "shell" } } }, "then": { "required": ["command", "label"], "properties": { "command": { "type": "string" }, "allowFailure": { "type": "boolean" } } } },
+          { "if": { "properties": { "type": { "const": "launch" } } }, "then": { "required": ["app"] } }
+        ]
+      }
+    },
+    "guide": {
+      "type": "object",
+      "description": "Operator guide in Markdown, keyed by locale such as \"en\" or \"id\".",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

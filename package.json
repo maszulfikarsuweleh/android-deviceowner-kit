@@ -1,0 +1,46 @@
+{
+  "name": "ownerkit",
+  "version": "0.1.0",
+  "description": "Provision Android dedicated devices (kiosks, POS, signage) from the browser over WebUSB: install apps, set Device Owner, apply settings. No adb or drivers needed.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "keywords": [
+    "android",
+    "device-owner",
+    "kiosk",
+    "webusb",
+    "adb",
+    "provisioning",
+    "dedicated-devices",
+    "mdm"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@yume-chan/adb": "^2.6.4",
+    "@yume-chan/adb-credential-web": "^2.1.0",
+    "@yume-chan/adb-daemon-webusb": "^2.3.2",
+    "@yume-chan/android-bin": "^2.1.0",
+    "@yume-chan/stream-extra": "^2.6.1",
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/w3c-web-usb": "^1.0.14",
+    "jsdom": "^29.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vite-plugin-singlefile": "^2.3.3",
+    "vitest": "^5.0.3"
+  }
+}

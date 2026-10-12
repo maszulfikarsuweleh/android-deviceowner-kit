@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Provision Android dedicated devices from the browser: install apps, set Device Owner and apply settings over USB.">
+  <title>Ownerkit</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23141821'/%3E%3Crect x='10' y='6' width='12' height='20' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Cpath d='M13.5 16l2 2 3.5-4' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="app-header">
+    <div id="header"></div>
+    <div id="actionbar"></div>
+  </header>
+
+  <main class="layout">
+    <div class="col">
+      <section class="panel" id="profile"></section>
+      <section class="panel" id="apps" hidden></section>
+      <section class="panel" id="fields" hidden></section>
+      <section class="panel" id="device"></section>
+    </div>
+    <div class="col">
+      <section class="panel" id="plan"></section>
+      <section class="panel" id="log"></section>
+      <section class="panel" id="history"></section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    Ownerkit is open source under the MIT licence. Everything runs in this browser; nothing is sent to a server.
+  </footer>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="guide" id="guide-root" aria-hidden="true"></aside>
+
+  <noscript>Ownerkit needs JavaScript.</noscript>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
