@@ -27,7 +27,7 @@ Sections:
 ### Data flow
 form state -> `formToProfile` -> `validateProfile` (existing, unchanged).
 - Valid: **Use this profile now** (`ctl.loadProfile(profile, "form")`) or **Download JSON**.
-- Invalid: issues shown inline next to the fields by path.
+- Invalid: issues are listed below the form with their profile path (paths refer to the generated profile, not to form rows).
 
 ### Error handling
 The form only guards its own mistakes (empty required values, duplicate derived ids). Everything else is `validateProfile`'s job. No second validator.

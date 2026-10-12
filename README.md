@@ -39,7 +39,7 @@ Ownerkit installs your apps, makes one of them the **Device Owner**, applies set
 }
 ```
 
-Use **Download template** in the app to get a fuller example. See [docs/profiles.md](docs/profiles.md) for every step type, placeholders, branding and guides, and [`examples/profiles`](examples/profiles) for complete profiles.
+Use **Build a profile** in the app to fill in a form and get a profile without writing JSON, or **Download template** for a fuller example to edit by hand. See [docs/profiles.md](docs/profiles.md) for every step type, placeholders, branding and guides, and [`examples/profiles`](examples/profiles) for complete profiles.
 
 ## Prepare your app
 

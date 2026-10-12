@@ -5,6 +5,7 @@ import { createController, prefs } from "./controller";
 import { detectLocale, setLocale, t, type Locale } from "./i18n";
 import { createStore } from "./state";
 import { mountActionBar } from "./ui/views/actionbar";
+import { mountBuilder } from "./ui/views/builder";
 import { mountDevice } from "./ui/views/device";
 import { mountGuide } from "./ui/views/guide";
 import { mountHeader } from "./ui/views/header";
@@ -37,6 +38,7 @@ const store = createStore({
   sound: prefs.get("sound", true),
   // Open the guide on a first visit with room for it; then remember the operator's choice.
   guideOpen: prefs.get("guideOpen", window.innerWidth >= 1320),
+  builderOpen: false,
   log: [],
 });
 
@@ -45,6 +47,7 @@ const ctl = createController(store);
 mountHeader($("header"), store, ctl);
 mountActionBar($("actionbar"), store, ctl);
 mountProfile($("profile"), store, ctl);
+mountBuilder($("builder"), store, ctl);
 mountApps($("apps"), store, ctl);
 mountFields($("fields"), store, ctl);
 mountDevice($("device"), store, ctl);

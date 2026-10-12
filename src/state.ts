@@ -33,6 +33,7 @@ export interface State {
   countdown: number | null;
   sound: boolean;
   guideOpen: boolean;
+  builderOpen: boolean;
   log: LogLine[];
 }
 

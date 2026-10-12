@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Removed run history and its CSV/JSON export. It stored device serials, models and per-unit field values, which is personal data. History already stored in the browser is deleted on first load.
+- "Build a profile" form that creates a profile without writing JSON.
 
 ## 0.1.0
 

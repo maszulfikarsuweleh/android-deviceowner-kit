@@ -320,3 +320,11 @@ body.guide-open .scrim { opacity: 1; pointer-events: auto; }
   .md h3 { break-after: avoid; }
   .md-code, .md-note { break-inside: avoid; }
 }
+
+/* Profile builder */
+.builder { display: grid; gap: 18px; }
+.builder-section { display: grid; gap: 10px; border-top: 1px solid var(--line-soft); padding-top: 14px; }
+.builder-section h3 { margin: 0; font-size: 14px; }
+.builder-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; align-items: end; }
+.builder label.field { display: grid; gap: 4px; font-size: 13px; }
+.builder textarea { font: inherit; width: 100%; min-height: 70px; }
