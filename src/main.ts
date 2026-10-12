@@ -8,7 +8,7 @@ import { mountActionBar } from "./ui/views/actionbar";
 import { mountDevice } from "./ui/views/device";
 import { mountGuide } from "./ui/views/guide";
 import { mountHeader } from "./ui/views/header";
-import { mountHistory, mountLog, mountPlan } from "./ui/views/run";
+import { mountLog, mountPlan } from "./ui/views/run";
 import { mountApps, mountFields, mountProfile } from "./ui/views/setup";
 
 const $ = (id: string) => document.getElementById(id) as HTMLElement;
@@ -38,7 +38,6 @@ const store = createStore({
   // Open the guide on a first visit with room for it; then remember the operator's choice.
   guideOpen: prefs.get("guideOpen", window.innerWidth >= 1320),
   log: [],
-  runs: [],
 });
 
 const ctl = createController(store);
@@ -51,7 +50,6 @@ mountFields($("fields"), store, ctl);
 mountDevice($("device"), store, ctl);
 mountPlan($("plan"), store, ctl);
 mountLog($("log"), store, ctl);
-mountHistory($("history"), store, ctl);
 mountGuide($("guide-root"), $("scrim"), store, ctl);
 
 const env = inspectEnvironment();

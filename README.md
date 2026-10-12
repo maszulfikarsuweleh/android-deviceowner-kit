@@ -81,7 +81,7 @@ src/
   apk/       APK and split-bundle reader (binary AndroidManifest parser)
   profile/   profile types, validation, placeholders, examples
   steps/     step implementations, runner with resume, preflight checks
-  store/     run history in IndexedDB
+  store/     one-time cleanup of the removed run history
   i18n/      English and Bahasa Indonesia strings, default operator guide
   ui/        DOM helpers, safe Markdown, views
 ```

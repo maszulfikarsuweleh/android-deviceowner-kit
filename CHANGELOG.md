@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Removed run history and its CSV/JSON export. It stored device serials, models and per-unit field values, which is personal data. History already stored in the browser is deleted on first load.
+
 ## 0.1.0
 
 First public release.

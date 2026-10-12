@@ -9,8 +9,7 @@ import type { State, Store, LogLevel } from "./state";
 import { runChecks } from "./steps/checks";
 import { runSteps } from "./steps/engine";
 import { describeStep } from "./steps/steps";
-import { clearRuns, listRuns, runsToCsv, saveRun } from "./store/history";
-import { downloadText } from "./ui/dom";
+import { purgeLegacyRuns } from "./store/purge";
 import { chime } from "./ui/sound";
 
 const prefs = {
@@ -28,11 +27,9 @@ export { prefs };
 export function createController(store: Store) {
   const get = store.get;
   let countdownTimer: number | undefined;
-  let runLog: string[] = [];
 
   function log(text: string, level: LogLevel = "info"): void {
     const time = new Date().toLocaleTimeString([], { hour12: false });
-    runLog.push(`${time} ${text}`);
     store.set((s) => ({ log: [...s.log, { time, level, text }].slice(-1000) }));
   }
   const say = (key: MessageKey, vars?: Record<string, string | number>, level?: LogLevel) => log(t(key, vars), level);
@@ -135,7 +132,6 @@ export function createController(store: Store) {
       let opened: Device | undefined;
       const device = await connect(usbDevice, () => opened && onDisconnected(opened));
       opened = device;
-      runLog = [];
       store.set({ device, connecting: false, checks: null, steps: [], outcome: null, failedAt: null });
       say("msg.connected", { manufacturer: device.facts.manufacturer, model: device.facts.model, version: device.facts.androidVersion }, "ok");
       await refreshChecks();
@@ -208,8 +204,6 @@ export function createController(store: Store) {
     if (!device || !profile || state.running) return;
     if (Object.keys(fieldProblems(profile, state.fields)).length) return;
 
-    if (startAt === 0) runLog = [];
-    const started = new Date();
     store.set({ running: true, outcome: null, failedAt: null });
 
     const outcome = await runSteps(profile.steps, {
@@ -234,25 +228,11 @@ export function createController(store: Store) {
     if (outcome.ok) say("msg.provisioned", { serial: device.facts.serial }, "ok");
     else say("msg.failed", { step: failedStep ?? "" }, "err");
 
-    await saveRun({
-      id: crypto.randomUUID(),
-      startedAt: started.toISOString(),
-      finishedAt: new Date().toISOString(),
-      profile: profile.name,
-      result: outcome.ok ? "provisioned" : "failed",
-      device: device.facts,
-      fields: Object.fromEntries((profile.fields ?? []).map((f) => [f.id, (get().fields[f.id] ?? "").trim()])),
-      apps: [...state.apps.values()].map((a) => ({ packageName: a.packageName, versionName: a.versionName })),
-      failedStep,
-      log: [...runLog],
-    });
-
     const kept = Object.fromEntries((profile.fields ?? []).filter((f) => f.keep).map((f) => [f.id, get().fields[f.id] ?? ""]));
     store.set({
       running: false,
       outcome: outcome.ok ? "provisioned" : "failed",
       failedAt: outcome.failedAt,
-      runs: await listRuns(),
       ...(outcome.ok ? { fields: kept } : {}),
     });
     if (get().sound) chime(outcome.ok ? "ok" : "fail");
@@ -280,7 +260,7 @@ export function createController(store: Store) {
     if (get().countdown !== null) store.set({ countdown: null });
   }
 
-  /* ---------- preferences, history ---------- */
+  /* ---------- preferences ---------- */
 
   function setLanguage(locale: Locale): void {
     setLocale(locale);
@@ -295,26 +275,14 @@ export function createController(store: Store) {
     if (key === "batch") value ? maybeStartBatch() : cancelCountdown();
   }
 
-  async function exportHistory(format: "csv" | "json"): Promise<void> {
-    const runs = await listRuns();
-    const stamp = new Date().toISOString().slice(0, 10);
-    if (format === "csv") downloadText(`ownerkit-history-${stamp}.csv`, runsToCsv(runs), "text/csv");
-    else downloadText(`ownerkit-history-${stamp}.json`, JSON.stringify(runs, null, 2), "application/json");
-  }
-
-  async function clearHistory(): Promise<void> {
-    await clearRuns();
-    store.set({ runs: [] });
-  }
-
   async function init(): Promise<void> {
-    store.set({ runs: await listRuns() });
+    await purgeLegacyRuns();
   }
 
   return {
     log, say, loadProfile, loadProfileFile, addAppFiles, downloadApp, setField,
     connectDevice, autoConnect, disconnect, refreshChecks, usbCheck,
-    provision, cancelCountdown, maybeStartBatch, setLanguage, toggle, exportHistory, clearHistory, init,
+    provision, cancelCountdown, maybeStartBatch, setLanguage, toggle, init,
   };
 }
 

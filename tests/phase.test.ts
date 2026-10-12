@@ -15,7 +15,7 @@ const profile: Profile = {
 const state = (patch: Partial<State> = {}): State => ({
   env: null, locale: "en", profile: null, profileFile: "", profileIssues: [], apps: new Map(), appErrors: new Map(),
   fields: {}, device: null, connecting: false, checks: null, steps: [], running: false, outcome: null, failedAt: null,
-  batch: false, countdown: null, sound: false, guideOpen: false, log: [], runs: [], ...patch,
+  batch: false, countdown: null, sound: false, guideOpen: false, log: [], ...patch,
 });
 
 const device = {} as Device;
