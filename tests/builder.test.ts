@@ -39,4 +39,14 @@ describe("mountBuilder", () => {
     expect((loadProfile.mock.calls[0] as unknown[])[0]).toMatchObject({ name: "Lobby", apps: [{ packageName: "com.example.kiosk" }] });
     expect(set).toHaveBeenCalledWith({ builderOpen: false });
   });
+
+  it("labels every select with translated text, including rows added later", () => {
+    const { root, click, type } = setup();
+    type(t("builder.appPackage"), "com.example.kiosk");
+    click(t("builder.addSetting"));
+    click(t("builder.addPermissions"));
+    const selects = [...root.querySelectorAll("select")];
+    expect(selects).toHaveLength(2);
+    expect(selects.map((x) => x.getAttribute("aria-label"))).toEqual([t("builder.namespace"), t("builder.permissionApp")]);
+  });
 });

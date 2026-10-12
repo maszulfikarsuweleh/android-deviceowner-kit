@@ -30,7 +30,7 @@ export function mountBuilder(root: HTMLElement, store: Store, ctl: Controller): 
   function render(): void {
     const appName = (i: number) => form.apps[i]?.label.trim() || form.apps[i]?.packageName.trim() || `#${i + 1}`;
     const appSelect = (value: number, set: (n: number) => void) =>
-      h("select", { on: { change: (e) => set(Number((e.target as HTMLSelectElement).value)) } },
+      h("select", { "aria-label": t("builder.permissionApp"), on: { change: (e) => set(Number((e.target as HTMLSelectElement).value)) } },
         ...form.apps.map((_, i) => h("option", { value: String(i), selected: i === value }, appName(i))));
 
     replace(root,
@@ -77,7 +77,7 @@ export function mountBuilder(root: HTMLElement, store: Store, ctl: Controller): 
 
         section(t("builder.settings"),
           ...form.settings.map((s, i) => h("div", { class: "builder-row" },
-            h("select", { "aria-label": "namespace", on: { change: (e) => (s.namespace = (e.target as HTMLSelectElement).value as typeof s.namespace) } },
+            h("select", { "aria-label": t("builder.namespace"), on: { change: (e) => (s.namespace = (e.target as HTMLSelectElement).value as typeof s.namespace) } },
               ...(["global", "secure", "system"] as const).map((n) => h("option", { value: n, selected: s.namespace === n }, n))),
             field(t("builder.settingKey"), s.key, (v) => (s.key = v), { placeholder: "stay_on_while_plugged_in" }),
             field(t("builder.settingValue"), s.value, (v) => (s.value = v)),

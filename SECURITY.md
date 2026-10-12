@@ -13,7 +13,7 @@ Ownerkit talks to a device over ADB, which the device owner has to approve on sc
 Everything stays in the browser that runs it:
 
 - **ADB key:** an RSA key in IndexedDB. A device that ticked "Always allow from this computer" trusts this browser profile.
-- **History:** each run's device facts, field values and log in IndexedDB.
+- **Run history:** not stored. Older versions kept it in IndexedDB; the current version deletes that data on first load.
 - **Preferences:** language, batch mode, sound and guide visibility in localStorage.
 
 Nothing is sent to a server. The hosted copy loads no third-party scripts or fonts.

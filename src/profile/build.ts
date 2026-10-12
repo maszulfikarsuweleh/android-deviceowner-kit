@@ -68,8 +68,9 @@ export function formToProfile(f: FormState): Record<string, unknown> {
     const id = makeId(label || packageName.split(".").pop() || packageName, appIds);
     return [{ index, spec: { id, packageName, ...(label ? { label } : {}) } }];
   });
-  const idOf = (index: number | null) => apps.find((a) => a.index === index)?.spec.id;
-  const owner = idOf(f.ownerAppIndex);
+  // A reference to a blank row stays as "" so validateProfile reports it, rather than silently dropping the owner or permissions.
+  const idOf = (index: number) => apps.find((a) => a.index === index)?.spec.id ?? "";
+  const owner = f.ownerAppIndex === null ? undefined : idOf(f.ownerAppIndex);
 
   const fieldIds = new Set<string>();
   const fields = f.fields.filter((x) => x.label.trim()).map((x) => ({
@@ -90,18 +91,17 @@ export function formToProfile(f: FormState): Record<string, unknown> {
   if (f.checks.noOtherDeviceOwner) checks.noOtherDeviceOwner = true;
 
   const steps: Record<string, unknown>[] = apps.map((a) => ({ type: "install", app: a.spec.id }));
-  if (owner) steps.push({ type: "setDeviceOwner" }, { type: "verifyDeviceOwner" });
+  if (owner !== undefined) steps.push({ type: "setDeviceOwner" }, { type: "verifyDeviceOwner" });
   for (const s of f.settings) {
     if (s.key.trim() || s.value.trim()) steps.push({ type: "setting", namespace: s.namespace, key: s.key.trim(), value: s.value.trim() });
   }
   for (const p of f.permissions) {
-    const app = idOf(p.appIndex);
     const permissions = words(p.permissions);
-    if (app && permissions.length) steps.push({ type: "grantPermissions", app, permissions });
+    if (permissions.length) steps.push({ type: "grantPermissions", app: idOf(p.appIndex), permissions });
   }
   const disabled = words(f.disabledPackages);
   if (disabled.length) steps.push({ type: "disablePackages", packages: disabled });
-  const main = owner ?? apps[0]?.spec.id;
+  const main = owner || apps[0]?.spec.id;
   if (main) steps.push({ type: "launch", app: main });
 
   const title = f.title.trim();
@@ -112,7 +112,7 @@ export function formToProfile(f: FormState): Record<string, unknown> {
     ...(f.description.trim() ? { description: f.description.trim() } : {}),
     ...(title || accent ? { branding: { ...(title ? { title } : {}), ...(accent ? { accent } : {}) } } : {}),
     apps: apps.map((a) => a.spec),
-    ...(owner ? { deviceOwner: { app: owner, receiver: f.ownerReceiver.trim() } } : {}),
+    ...(owner !== undefined ? { deviceOwner: { app: owner, receiver: f.ownerReceiver.trim() } } : {}),
     ...(fields.length ? { fields } : {}),
     ...(Object.keys(checks).length ? { checks } : {}),
     steps,

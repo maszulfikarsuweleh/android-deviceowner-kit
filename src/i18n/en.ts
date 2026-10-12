@@ -82,6 +82,8 @@ export const en = {
   "builder.settings": "Android settings",
   "builder.settingKey": "Setting name",
   "builder.settingValue": "Value",
+  "builder.namespace": "Setting namespace",
+  "builder.permissionApp": "App",
   "builder.addSetting": "Add setting",
   "builder.permissions": "Permissions to grant",
   "builder.permissionsList": "Permissions (separate with spaces or commas)",

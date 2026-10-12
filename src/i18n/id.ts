@@ -84,6 +84,8 @@ export const id: Record<MessageKey, string> = {
   "builder.settings": "Pengaturan Android",
   "builder.settingKey": "Nama pengaturan",
   "builder.settingValue": "Nilai",
+  "builder.namespace": "Namespace pengaturan",
+  "builder.permissionApp": "Aplikasi",
   "builder.addSetting": "Tambah pengaturan",
   "builder.permissions": "Izin yang diberikan",
   "builder.permissionsList": "Izin (pisahkan dengan spasi atau koma)",

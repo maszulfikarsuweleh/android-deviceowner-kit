@@ -61,7 +61,7 @@ describe("formToProfile", () => {
       apps: [app("com.example.a", "A"), app("", ""), app("com.example.c", "C")],
       ownerAppIndex: 2,
       ownerReceiver: ".Admin",
-      permissions: [{ appIndex: 2, permissions: "android.permission.CAMERA" }, { appIndex: 1, permissions: "android.permission.CAMERA" }],
+      permissions: [{ appIndex: 2, permissions: "android.permission.CAMERA" }],
       settings: [{ namespace: "system", key: "", value: "" }],
     }));
     expect((p.deviceOwner as { app: string }).app).toBe("c");
@@ -70,11 +70,23 @@ describe("formToProfile", () => {
     expect(validateProfile(p).issues).toEqual([]);
   });
 
+  it("reports a Device Owner or permission row that points at a blank app instead of dropping it", () => {
+    const p = formToProfile(form({
+      apps: [app("", ""), app("com.example.b", "B")],
+      ownerAppIndex: 0,
+      ownerReceiver: ".Admin",
+      permissions: [{ appIndex: 0, permissions: "android.permission.CAMERA" }],
+    }));
+    const paths = validateProfile(p).issues.map((i) => i.path);
+    expect(paths).toContain("deviceOwner.app");
+    expect(paths.some((x) => x.endsWith(".app") && x.startsWith("steps["))).toBe(true);
+  });
+
   it("an empty form yields validation issues instead of throwing", () => {
     const p = formToProfile(emptyForm());
     const { profile, issues } = validateProfile(p);
     expect(profile).toBeUndefined();
-    expect(issues.map((i) => i.path)).toEqual(expect.arrayContaining(["name", "steps"]));
+    expect(issues.map((i) => i.path)).toEqual(expect.arrayContaining(["name", "deviceOwner.app"]));
   });
 
   it("lets a setting use a per-unit field placeholder", () => {

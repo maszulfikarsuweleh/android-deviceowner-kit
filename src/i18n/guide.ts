@@ -29,7 +29,6 @@ export const defaultGuide: Record<Locale, string> = {
 
 - The app opens full screen.
 - Home and Recents don't leave the app (if the app uses kiosk mode).
-- The device appears in **History** as Provisioned.
 
 For many devices, turn on **Batch mode**: each newly connected device starts on its own, and a sound plays when it's done.
 
@@ -108,7 +107,6 @@ Check it works with \`adb version\`, and see connected devices with \`adb device
 
 - Aplikasi terbuka layar penuh.
 - Tombol Home dan Recents tidak keluar dari aplikasi (jika aplikasi memakai mode kios).
-- Perangkat muncul di **Riwayat** sebagai Terpasang.
 
 Untuk banyak perangkat, aktifkan **Mode massal**: setiap perangkat yang baru dihubungkan langsung dimulai, dan suara berbunyi saat selesai.
 

@@ -7,7 +7,7 @@ Ownerkit installs your apps, makes one of them the **Device Owner**, applies set
 - **Profiles describe the job.** A JSON file lists the apps, the Device Owner, the settings, and what the operator fills in for each unit. Ownerkit turns it into a plan the operator can follow.
 - **Built for operators, not developers.** A single "next action" button, preflight checks with fixes in plain language, a built-in guide (English and Bahasa Indonesia, printable as an SOP), and a USB check for when a device won't appear.
 - **Batch mode for rollouts.** Plug in a device and it provisions itself, chimes when done, and waits for the next one.
-- **Nothing leaves the browser.** History and full per-device logs stay in the browser's own storage, and you can export them as CSV or JSON.
+- **Nothing leaves the browser.** Ownerkit keeps no record of the devices you provision; only your preferences and the ADB key stay in the browser's own storage.
 
 > Ownerkit uses `dpm set-device-owner` over ADB, the same method Google documents for development and small fleets. For thousands of devices, consider zero-touch enrollment or QR provisioning with an EMM.
 
