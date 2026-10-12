@@ -6,7 +6,6 @@ import type { ValidationIssue } from "./profile/validate";
 import type { Profile } from "./profile/types";
 import type { CheckResult } from "./steps/checks";
 import type { StepState } from "./steps/engine";
-import type { RunRecord } from "./store/history";
 
 export type LogLevel = "info" | "ok" | "warn" | "err";
 export interface LogLine { time: string; level: LogLevel; text: string }
@@ -34,8 +33,8 @@ export interface State {
   countdown: number | null;
   sound: boolean;
   guideOpen: boolean;
+  builderOpen: boolean;
   log: LogLine[];
-  runs: RunRecord[];
 }
 
 type Listener = (state: State, prev: State) => void;

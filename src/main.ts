@@ -5,10 +5,11 @@ import { createController, prefs } from "./controller";
 import { detectLocale, setLocale, t, type Locale } from "./i18n";
 import { createStore } from "./state";
 import { mountActionBar } from "./ui/views/actionbar";
+import { mountBuilder } from "./ui/views/builder";
 import { mountDevice } from "./ui/views/device";
 import { mountGuide } from "./ui/views/guide";
 import { mountHeader } from "./ui/views/header";
-import { mountHistory, mountLog, mountPlan } from "./ui/views/run";
+import { mountLog, mountPlan } from "./ui/views/run";
 import { mountApps, mountFields, mountProfile } from "./ui/views/setup";
 
 const $ = (id: string) => document.getElementById(id) as HTMLElement;
@@ -37,8 +38,8 @@ const store = createStore({
   sound: prefs.get("sound", true),
   // Open the guide on a first visit with room for it; then remember the operator's choice.
   guideOpen: prefs.get("guideOpen", window.innerWidth >= 1320),
+  builderOpen: false,
   log: [],
-  runs: [],
 });
 
 const ctl = createController(store);
@@ -46,12 +47,12 @@ const ctl = createController(store);
 mountHeader($("header"), store, ctl);
 mountActionBar($("actionbar"), store, ctl);
 mountProfile($("profile"), store, ctl);
+mountBuilder($("builder"), store, ctl);
 mountApps($("apps"), store, ctl);
 mountFields($("fields"), store, ctl);
 mountDevice($("device"), store, ctl);
 mountPlan($("plan"), store, ctl);
 mountLog($("log"), store, ctl);
-mountHistory($("history"), store, ctl);
 mountGuide($("guide-root"), $("scrim"), store, ctl);
 
 const env = inspectEnvironment();

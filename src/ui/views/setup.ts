@@ -54,6 +54,7 @@ export function mountProfile(root: HTMLElement, store: Store, ctl: Controller): 
             h("p", { class: "muted" }, t("profile.empty")),
             dropZone(t("profile.drop"), ".json,application/json", false, (f) => f[0] && void ctl.loadProfileFile(f[0])),
             h("div", { class: "row" },
+              h("button", { class: "btn btn-primary", type: "button", on: { click: () => store.set({ builderOpen: true }) } }, t("builder.open")),
               h("button", { class: "btn", type: "button", on: { click: () => ctl.loadProfile(exampleProfile, "example") } }, t("profile.example")),
               h("button", { class: "btn btn-quiet", type: "button", on: { click: () => downloadText("ownerkit-profile.json", JSON.stringify(templateProfile, null, 2), "application/json") } }, icon("file"), t("profile.template")))),
       issues,
